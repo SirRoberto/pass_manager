@@ -1,0 +1,41 @@
+<!-- web/templates/index.html -->
+<html>
+    <head>
+        <title>PassManager</title>
+    </head>
+
+    <body>
+        <h1>Password Manager</h1>
+        
+        <h2>Witaj w menedżerze haseł</h2>
+        <p>
+            Zarządzaj swoimi hasłami w przeglądarce.
+            Hasła są bezpiecznie przechowywane na twoim koncie i zawsze dostępne.
+        </p>
+
+        <h2>Sprawdzanie hasła</h2>
+        <p>
+            Sprawdź siłę i bezpieczeństwo zapisanych haseł i uzyskaj indywidualną
+            poradę.
+        </p>
+
+        <h2>Generowanie nowych haseł</h2>
+        <p>
+            Nie masz pomysłu na nowe hasło? Wygeneruj je!
+        </p>
+
+        <h2>Nic się nie bój! Załóż konto już teraz!</h2>
+        <p>
+            <a href="register"><button type="submit">Zarejestruj się!</button></a>
+        </p>
+
+        <h2>Masz już konto?</h2>
+        <p>
+            <a href="login"><button type="submit">Zaloguj się</button></a>
+        </p>
+
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        </form>
+    </body>
+</html>

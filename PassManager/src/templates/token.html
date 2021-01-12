@@ -1,0 +1,25 @@
+<!-- web/templates/login.html -->
+<html>
+    <head>
+        <title>Formularz autoryzacji użytkownika</title>
+        <link rel="stylesheet" href="../static/alert.css">
+    </head>
+    <body>
+        <div class="login form">
+            <h1>Autoryzacja</h1>
+            <div class="{{alert_t}}">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                {{ message }}
+            </div>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <label for="token">Token:</label><br>
+                    <input type="text" id="token" name="token"><br>
+                    <input type="submit" id="submitbutton" value="Wyślij">
+                    <a href="/"><button type="button">Anuluj</button></a>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,61 @@
+<!-- web/templates/register.html -->
+<html>
+
+<head>
+    <title>Formularz rejestracji</title>
+    <link rel="stylesheet" href="../static/alert.css">
+    <link rel="stylesheet" href="../static/progressbar.css">
+</head>
+
+<body>
+    <div class="register form">
+        <h1>REJESTRACJA</h1>
+        <div class="{{alert_t}}">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> {{ message }}
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <label for="nickname">Nazwa użytkownika:</label><br>
+            <input type="text" id="nickname" name="nickname" required type="text" value="{{data.user}}"><br>
+
+            <label for="email">Adres e-mail:</label><br>
+            <input type="email" id="email" name="email" required type="text" value="{{data.email}}"><br>
+
+            <label for="password">Hasło do konta:</label>
+            <input type="password" id="password" name="password" required type="text">
+            <div class="w3-light-grey">
+                <div class="w3-container w3-center" id="bar">
+                    <p id="bar-val"></p>
+                </div>
+            </div>
+            <br>
+            <label for="repassword">Powtórz hasło:</label><br>
+            <input type="password" id="repassword" required type="text" name="repassword"><br>
+            <br>
+
+            <label for="masterpassword">Master Password:</label>
+            <input type="password" id="masterpassword" name="masterpassword" required>
+            <div class="w3-light-grey">
+                <div class="w3-container w3-center" id="masterbar">
+                    <p id="master-bar-val"></p>
+                </div>
+            </div>
+            <br>
+            <label for="remasterpassword">Powtórz hasło:</label><br>
+            <input type="password" id="remasterpassword" required type="text" name="remasterpassword"><br>
+            <br>
+
+            <input type="submit" id="submitbutton" value="Wyślij">
+            <a href="/"><button type="button">Anuluj</button></a><br>
+            <br>
+
+            <label for="login">Masz już konto?</label><br>
+            <a href="/login"><button type="button" id="login" name="login">Przejdź do strony logowania</button></a>
+        </form>
+    </div>
+    <script src="../static/passtrength.js"></script>
+</body>
+
+</html>

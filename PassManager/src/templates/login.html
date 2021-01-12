@@ -1,0 +1,30 @@
+<!-- web/templates/login.html -->
+<html>
+    <head>
+        <title>Formularz logowania</title>
+        <link rel="stylesheet" href="../static/alert.css">
+    </head>
+    <body>
+        <div class="login form">
+            <h1>Logowanie</h1>
+            <div class="{{alert_t}}">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                {{ message }}
+            </div>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <label for="nickname">Nickname:</label><br>
+                    <input type="text" id="nickname" name="nickname"><br>
+                    
+                    <label for="password">Hasło do konta:</label><br>
+                    <input type="password" id="password" name="password"><br>
+                    
+                    <input type="submit" id="submitbutton" value="Zaloguj">
+                    <br>
+                    <a href="/"><button type="button">Anuluj</button></a>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

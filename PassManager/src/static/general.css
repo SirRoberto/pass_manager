@@ -1,0 +1,102 @@
+.manager.form {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    width: 80%;
+    min-width: 400px;
+    background-color: #53a3ff;
+}
+
+.addPass.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.item.box {
+    order: 1;
+    align-items: flex-end;
+}
+
+.item.box.pass {
+    order: 1;
+    flex-basis: 100%;
+    align-items: center;
+}
+
+.listPass.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.listPass.container.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+
+input, button {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 8px;
+    min-width: 20px;
+    box-sizing: border-box;
+}
+
+label, span, h1, h2, h3, p{
+    color: aliceblue;
+}
+
+p.pass {
+    background-color:white;
+    color: black;
+    display: block;
+    margin-top: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f72c9b;
+    color: white;
+    opacity: 1;
+    transition: opacity 0.6s;
+    margin-bottom: 15px;
+}
+
+.alert.success {
+    background-color: #4CAF50;
+}
+
+.alert.info {
+    background-color: #3584dd;
+}
+
+.alert.warning {
+    background-color: #ff9800;
+}
+
+.alert.error {
+    background-color: #ff2525;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}

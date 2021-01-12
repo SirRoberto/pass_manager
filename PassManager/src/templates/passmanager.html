@@ -1,0 +1,86 @@
+<!-- web/templates/passmanager.html -->
+<html>
+    <head>
+        <title>PassManager</title>
+        <link rel="stylesheet" href="../static/general.css">
+    </head>
+    <body>
+        <div class="{{alert_t}}">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+        </div>
+        <div class="manager form">
+            <h1>Password Manager</h1>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <h2>Dodawanie haseł</h2>
+                <div class="addPass container">
+                    <div class="item box">
+                        <label for="nameservice">Nazwa/URL serwisu:</label><br>
+                        <input type="text" id="nameservice" required name="nameservice">
+                    </div>
+                    <div class="item box">
+                        <label for="newpassword">Hasło:</label><br>
+                        <input type="password" id="newpassword" required name="newpassword">
+                    </div>
+                    <div class="item box">
+                        <label for="renewpassword">Powtórz:</label><br>
+                        <input type="password" id="renewpassword" required name="renewpassword">
+                    </div>
+                    <div class="item box">
+                        <label for="masterpassword">Master Password:</label><br>
+                        <input type="password" id="masterpassword" required name="masterpassword">
+                    </div>
+                    <div class="item box">
+                        <label for="addButton"></label><br>
+                        <input type="submit" id="addButton"  name="addButton" value="Dodaj">
+                    </div>
+                </div>
+            </form>
+
+            <h2>Lista twoich haseł</h2>
+            {% set pnr = 0 %}
+            {% for p in passwords %}
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    {% set pnr = loop.index0 %}
+                    <div class="listPass container">
+                        <div class="listPass container row">
+                            <div class="item box pass">
+                            <label for="service">Nazwa/URL serwisu:</label><br>
+                            <p class="pass" id="service{{pnr}}" name="service{{pnr}}">{{ p.name }}</p>
+                        </div>
+                        <div class="item box pass">
+                            <label for="masterpass">Hasło:</label><br>
+                            <input type="{{p.out_type}}" id="masterpass{{pnr}}" name="masterpass{{pnr}}" placeholder="Master Password" required value="{{ p.password }}">
+                        </div>
+                        <div class="item box">
+                            <label for="showButton{{pnr}}"></label><br>
+                            <input type="submit" id="showButton{{pnr}}"  name="showButton{{pnr}}" value="Pokaż">
+                        </div>
+                        <div class="item box">
+                            <label for=copyButton{{pnr}}></label><br>
+                            <button id="copyButton{{pnr}}"  name="copyButton{{pnr}}">Skopiuj</button>
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+
+            <h2>Lista uwierzytelnionych urządzeń/połączeń:</h2>
+            {% for d in devices %}
+                {% set pnr2 = loop.index0 + 1 %}
+                <div>
+                    <p> {{pnr2}}. {{d}} </p><br>
+                </div>
+            {% endfor %}
+
+            <h3>Wyloguj się</h3>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="submit" id="logoutButton"  name="logoutButton" value="Wyloguj się">
+            </form>
+        </div>
+        <input type="hidden" id="len" name="len" value="{{ passwords | length }}"/>
+        <script src="../static/copy.js"></script>
+    </body>
+</html>
