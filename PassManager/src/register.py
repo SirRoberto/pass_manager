@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response, render_template
+from flask import Blueprint, request, render_template
 import string
 from src.crypto import hash_password
 from src.sqlDAO import sqlDAO_User
@@ -20,8 +20,6 @@ def register():
             register_user(data)
             mess = f"Witaj na pokładzie {data['user']}!"
             return render_template('register.html', message=mess, alert_t=alert_types[1], data=data)
-        except SamePasswordAndMasterPassException as err:
-            return render_template('register.html', message=err, alert_t=alert_types[2], data=data)
         except Exception as err:
             return render_template('register.html', message=err, alert_t=alert_types[2], data=data)
 
@@ -32,9 +30,7 @@ def init_data():
         'user' : 'username',
         'email' : 'email@mail.com',
         'password' : '',
-        'repassword' : '',
-        'masterpassword' : '',
-        'remasterpassword' : ''
+        'repassword' : ''
     }
     return data
 
@@ -44,8 +40,6 @@ def read_user_data():
     data['email'] = request.form.get('email')
     data['password'] = request.form.get('password')
     data['repassword'] = request.form.get('repassword')
-    data['masterpassword'] = request.form.get('masterpassword')
-    data['remasterpassword'] = request.form.get('remasterpassword')
     return data
 
 def validate_data(data):
@@ -67,17 +61,8 @@ def validate_data(data):
     allowed = string.ascii_letters + string.digits + string.punctuation
     condition, c = does_string_contain_only_allowed_chars(data['repassword'], allowed)
     if not condition:
-        raise Exception(f"W podanym master-password znalazły się niedozwolone znaki: {c}")
-
-    allowed = string.ascii_letters + string.digits + string.punctuation
-    condition, c = does_string_contain_only_allowed_chars(data['masterpassword'], allowed)
-    if not condition:
-        raise Exception(f"W podanym master-password znalazły się niedozwolone znaki: {c}")
-
-    allowed = string.ascii_letters + string.digits + string.punctuation
-    condition, c = does_string_contain_only_allowed_chars(data['remasterpassword'], allowed)
-    if not condition:
         raise Exception(f"W podanym haśle znalazły się niedozwolone znaki: {c}")
+
 
     if sqlDAO_User.is_exists_user(data['user']):
         raise Exception(f"Użytkownik {data['user']} już istnieje!")
@@ -87,22 +72,14 @@ def validate_data(data):
 
     username_constriants(data['user'])
     password_constraints(data['password'])
-    password_constraints(data['masterpassword'])
 
     if data['password'] != data['repassword']:
         raise Exception("Podałeś dwa różne hasła!")
 
-    if data['masterpassword'] != data['remasterpassword']:
-        raise Exception("Podałeś dwa różne hasła główne!")
-
-    if data['password'] == data['masterpassword']:
-        raise SamePasswordAndMasterPassException()
-
 
 def register_user(data):
     hash_pass, salt = hash_password(data['password'])
-    hash_master_pass, salt_master_pass = hash_password(data['masterpassword'])
-    sqlDAO_User.insert_user(data['user'], data['email'], hash_pass, salt, hash_master_pass, salt_master_pass)
+    sqlDAO_User.insert_user(data['user'], data['email'], hash_pass, salt)
 
 def username_constriants(name):
     minLength = 6
@@ -130,9 +107,3 @@ def password_constraints(password):
     nPunctuations = np.sum([c in string.punctuation for c in password])
     if nPunctuations < min_nPunctuations:
         raise Exception(f"Hasło powinno zawierać conajmniej {min_nPunctuations} znak specjalny!")
-
-
-class SamePasswordAndMasterPassException(Exception):
-    def __init__(self, message="Master Password nie może być takie samo jak hasło do konta!"):
-        self.message = message
-        super().__init__(self.message)

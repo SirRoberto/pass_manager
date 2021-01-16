@@ -11,6 +11,8 @@
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 {{ message }}
             </div>
+
+            <div>
                 <form method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
@@ -20,9 +22,22 @@
                     <label for="password">Hasło do konta:</label><br>
                     <input type="password" id="password" name="password"><br>
                     
-                    <input type="submit" id="submitbutton" value="Zaloguj">
+                    <input type="submit" id="submitbutton" name="submitbutton" value="Zaloguj">
                     <br>
-                    <a href="/"><button type="button">Anuluj</button></a>
+                    <a href="/"><button type="button">Anuluj</button></a><br>
+                </form>
+            </div>
+
+            <div>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <p>Nie pamiętasz hasła lub twoje konto zostało zablokowane?</p>
+
+                    <label for="email">Podaj eamil:</label><br>
+                    <input type="text" id="email" name="email"><br>
+                    
+                    <input type="submit" id="submitbutton" name="submitbutton" value="Wyślij">
                 </form>
             </div>
         </div>

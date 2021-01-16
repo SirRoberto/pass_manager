@@ -65,6 +65,6 @@ input {
     box-sizing: border-box;
 }
 
-label, h1, h2 {
+label, h1, h2, p {
     color: aliceblue;
 }

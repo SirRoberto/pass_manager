@@ -1,0 +1,36 @@
+<!-- web/templates/resetpass.html -->
+<html>
+    <head>
+        <title>Formularz zmiany hasła</title>
+        <link rel="stylesheet" href="../static/alert.css">
+        <link rel="stylesheet" href="../static/progressbar.css">
+    </head>
+    <body>
+        <div class="login form">
+            <h1>Formularz zmiany hasła</h1>
+            <div class="{{alert_t}}">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                {{ message }}
+            </div>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <label for="password">Nowe hasło:</label><br>
+                    <input type="password" id="password" name="password"><br>
+                    <div class="w3-light-grey">
+                        <div class="w3-container w3-center" id="bar">
+                            <p id="bar-val"></p>
+                        </div>
+                    </div>
+
+                    <label for="repassword">Powtórz nowe hasło:</label><br>
+                    <input type="password" id="repassword" name="repassword"><br>
+
+                    <input type="submit" id="submitbutton" value="Wyślij">
+                    <a href="/"><button type="button">Anuluj</button></a>
+                </form>
+            </div>
+        </div>
+        <script src="../static/passtrength.js"></script>
+    </body>
+</html>

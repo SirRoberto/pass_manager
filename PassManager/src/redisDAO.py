@@ -10,7 +10,7 @@ class RedisDAO:
             print("Error while connecting with Redis")
 
     def create_token(self, email):
-        token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        token = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
         time = 1 * 60
         self.db.set(email, token, time)
         return token
@@ -20,9 +20,24 @@ class RedisDAO:
             return self.db.get(email).decode('utf-8')
         except Exception:
             return None
+
+
+    def create_key_to_reset_password(self, email):
+        key = ''.join(random.choices(string.ascii_letters + string.digits, k=64))
+        time = 5 * 60
+        self.db.set(f"reset{key}", email, time)
+        return key
+
+    def get_resetpass_email(self, key):
+        try:
+            return self.db.get(f"reset{key}").decode('utf-8')
+        except Exception:
+            return None
+
     
     def get_time(self, key):
         return self.db.ttl(key)
+
 
     def set_user_session(self, sid, user_id, time = 300):
         key = f"sessions:{sid}"
@@ -32,11 +47,13 @@ class RedisDAO:
         key = f"sessions:{sid}"
         self.db.delete(key)
 
+
     def get_user_id(self, sid):
         key = f"sessions:{sid}"
         if not self.db.exists(key):
             raise Exception("Sesja nie istnieje")
         return self.db.get(key).decode('utf-8')
+
 
     def incr_counter_failed_login_attempts(self, user_id):
         key = f"counter_log_attempts:{user_id}"
@@ -49,9 +66,14 @@ class RedisDAO:
             return 0
         return self.db.get(key)
 
+
     def set_temp_block_user(self, user_id, time):
         key = f"block:{user_id}"
         self.db.set(key, 1, time)
+
+    def del_temp_block_user(self, user_id):
+        key = f"block:{user_id}"
+        self.db.delete(key)
 
     def is_user_blocked(self, user_id):
         key = f"block:{user_id}"

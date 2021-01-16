@@ -1,18 +1,26 @@
-document.getElementById("password").addEventListener('input', function(evt) {
-    var s = strength(document.getElementById("password").value);
-    var d = parse(s);
-    document.getElementById("bar").style.backgroundColor = d[1];
-    document.getElementById("bar").style.width = d[0];
-    document.getElementById("bar-val").innerHTML = d[0];
-});
+try {
+    document.getElementById("password").addEventListener('input', function(evt) {
+        var s = strength(document.getElementById("password").value);
+        var d = parse(s);
+        document.getElementById("bar").style.backgroundColor = d[1];
+        document.getElementById("bar").style.width = d[0];
+        document.getElementById("bar-val").innerHTML = d[0];
+    });
+} catch (e) {
+    //pass
+}
 
-document.getElementById("masterpassword").addEventListener('input', function(evt) {
-    var s = strength(document.getElementById("masterpassword").value);
-    var d = parse(s);
-    document.getElementById("masterbar").style.backgroundColor = d[1];
-    document.getElementById("masterbar").style.width = d[0];
-    document.getElementById("master-bar-val").innerHTML = d[0];
-});
+try {
+    document.getElementById("masterpassword").addEventListener('input', function(evt) {
+        var s = strength(document.getElementById("masterpassword").value);
+        var d = parse(s);
+        document.getElementById("masterbar").style.backgroundColor = d[1];
+        document.getElementById("masterbar").style.width = d[0];
+        document.getElementById("master-bar-val").innerHTML = d[0];
+    });
+} catch (e) {
+    //pass
+}
 
 function parse(value) {
     var width = 10 * value;

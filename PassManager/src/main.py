@@ -5,6 +5,7 @@ from src.register import register_page
 from src.login import login_page
 from src.passmanager import passmanager_page
 from src.token_auth import token_page
+from src.resetpass import resetpass_page
 import os
 
 
@@ -24,13 +25,11 @@ app.register_blueprint(register_page)
 app.register_blueprint(login_page)
 app.register_blueprint(passmanager_page)
 app.register_blueprint(token_page)
+app.register_blueprint(resetpass_page)
 
 @app.after_request
 def add_security_headers(resp):
     resp.headers['Content-Security-Policy']="default-src 'self'"
-    #resp.headers['X-Content-Type-Options'] = 'nosniff'
-    #resp.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    #resp.headers['X-XSS-Protection'] = '1; mode=block'
     return resp
 
 

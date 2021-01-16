@@ -9,18 +9,13 @@ CREATE TABLE IF NOT EXISTS users (
     login_salt NVARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS master_passwords (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    master_pass NVARCHAR(255) NOT NULL,
-    master_salt NVARCHAR(255) NOT NULL,
-    user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
 
 CREATE TABLE IF NOT EXISTS passwords (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pass NVARCHAR(255),
     name NVARCHAR(255),
+    nonce NVARCHAR(255),
+    tag NVARCHAR(255),
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -43,4 +38,5 @@ CREATE USER 'passmanagerUser'@'%' IDENTIFIED WITH mysql_native_password BY 'db-7
 GRANT INSERT ON db_passmanager.* TO 'passmanagerUser'@'%';
 GRANT SELECT ON db_passmanager.* TO 'passmanagerUser'@'%';
 GRANT DELETE ON db_passmanager.devices TO 'passmanagerUser'@'%';
+GRANT UPDATE ON db_passmanager.users TO 'passmanagerUser'@'%';
 FLUSH PRIVILEGES;

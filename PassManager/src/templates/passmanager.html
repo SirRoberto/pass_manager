@@ -3,6 +3,7 @@
     <head>
         <title>PassManager</title>
         <link rel="stylesheet" href="../static/general.css">
+        <link rel="stylesheet" href="../static/progressbar.css">
     </head>
     <body>
         <div class="{{alert_t}}">
@@ -24,16 +25,21 @@
                         <input type="password" id="newpassword" required name="newpassword">
                     </div>
                     <div class="item box">
-                        <label for="renewpassword">Powtórz:</label><br>
-                        <input type="password" id="renewpassword" required name="renewpassword">
-                    </div>
-                    <div class="item box">
                         <label for="masterpassword">Master Password:</label><br>
                         <input type="password" id="masterpassword" required name="masterpassword">
                     </div>
                     <div class="item box">
+                        <label for="remasterpassword">Powtórz:</label><br>
+                        <input type="password" id="remasterpassword" required name="remasterpassword">
+                    </div>
+                    <div class="item box">
                         <label for="addButton"></label><br>
                         <input type="submit" id="addButton"  name="addButton" value="Dodaj">
+                    </div>
+                </div>
+                <div class="w3-light-grey">
+                    <div class="w3-container w3-center" id="masterbar">
+                        <p id="master-bar-val"></p>
                     </div>
                 </div>
             </form>
@@ -70,7 +76,11 @@
             {% for d in devices %}
                 {% set pnr2 = loop.index0 + 1 %}
                 <div>
-                    <p> {{pnr2}}. {{d}} </p><br>
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <p> {{pnr2}}. {{d[0]}} </p>
+                        <input type="submit" id="delButton{{pnr2}}"  name="delButton{{pnr2}}" value="Usuń">
+                    </form>
                 </div>
             {% endfor %}
 
@@ -82,5 +92,6 @@
         </div>
         <input type="hidden" id="len" name="len" value="{{ passwords | length }}"/>
         <script src="../static/copy.js"></script>
+        <script src="../static/passtrength.js"></script>
     </body>
 </html>

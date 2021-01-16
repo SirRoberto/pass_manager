@@ -21,36 +21,56 @@ def login():
 
     if request.method == 'POST':
         try:
-            data = read_user_data()
-            validate_data(data)
-            if is_user_blocked(data['user']):
-                raise UserIsBlockedException()
-            authenticate(data['user'], data['password'], data['device'])
-            response = authorize(data['user'])
-            return response
-        except InvalidDataException as err:
-            message=err
-            alert_t=alert_types[2]
-        except WrongUsernameException:
-            message = "Dane logowania są niepoprawne"
-            alert_t=alert_types[2]
-        except WrongPasswordException:
-            uid = sqlDAO_User.get_user_id(data['user'])
-            redisDAO.incr_counter_failed_login_attempts(uid)
-            verify_login_attempts(uid)
-            err = "Dane logowania są niepoprawne"
-            alert_t = alert_types[2]
-            if get_block_time_user(uid) != '0':
-                err += f"\n Konto użytkownika zostało zablokowane na {get_block_time_user(uid)} sekund"
-                alert_t = alert_types[3]
-            message = err
-        except NewDeviceException as err:
-            response = authenticate_by_token(data['user'], err)
-            return response
-        except UserIsBlockedException:
-            uid = sqlDAO_User.get_user_id(data['user'])
-            message = f"Konto użytkownika zostało zablokowane na {get_block_time_user(uid)} sekund"
-            alert_t = alert_types[3]
+            if request.form['submitbutton'] == 'Zaloguj':
+                try:
+                    data = read_user_data()
+                    validate_data(data)
+                    if is_user_blocked(data['user']):
+                        raise UserIsBlockedException()
+                    authenticate(data['user'], data['password'], data['device'])
+                    response = authorize(data['user'])
+                    return response
+                except InvalidDataException as err:
+                    message=err
+                    alert_t=alert_types[2]
+                except WrongUsernameException:
+                    message = "Dane logowania są niepoprawne"
+                    alert_t=alert_types[2]
+                except WrongPasswordException:
+                    uid = sqlDAO_User.get_user_id(data['user'])
+                    redisDAO.incr_counter_failed_login_attempts(uid)
+                    verify_login_attempts(uid)
+                    err = "Dane logowania są niepoprawne"
+                    alert_t = alert_types[2]
+                    if get_block_time_user(uid) != '0':
+                        err += f"\n Konto użytkownika zostało zablokowane na {get_block_time_user(uid)} sekund"
+                        alert_t = alert_types[3]
+                    message = err
+                except NewDeviceException as err:
+                    response = authenticate_by_token(data['user'], err)
+                    return response
+                except UserIsBlockedException:
+                    uid = sqlDAO_User.get_user_id(data['user'])
+                    message = f"Konto użytkownika zostało zablokowane na {get_block_time_user(uid)} sekund"
+                    alert_t = alert_types[3]
+                return render_template('login.html', message=message, alert_t=alert_t, data=data)
+        except Exception:
+            pass
+        
+        try:
+            if request.form['submitbutton'] == 'Wyślij':
+                try:
+                    email = request.form.get('email')
+                    send_password_reset_eamil(email)
+                    message = """Na podany adres email została wysłana wiadomość
+                                    zawierająca link do zresetowania hasła."""
+                    alert_t = alert_types[1]
+                except Exception as err:
+                    message = err
+                    alert_t = alert_types[3]
+                return render_template('login.html', message=message, alert_t=alert_t, data=data)
+        except:
+            pass
 
     return render_template('login.html', message=message, alert_t=alert_t, data=data)
 
@@ -92,6 +112,7 @@ def is_user_blocked(user):
         raise WrongUsernameException()
 
     return redisDAO.is_user_blocked(uid)
+
 
 def verify_login_attempts(uid):
     attempts = int(redisDAO.get_count_login_attempts(uid))
@@ -145,9 +166,17 @@ def authenticate_by_token(username, err):
     response.headers["Location"] = url_for("token_page.token")
     return response
 
+
 def send_token_by_email(token, email):
     print(f"\n{email} twój token to: \n{token}\n")
 
+
+def send_password_reset_eamil(email):
+    if not sqlDAO_User.is_exists_email(email):
+        return
+    key = redisDAO.create_key_to_reset_password(email)
+    link = f"https://localhost/resetpass/{key}"
+    print(f"\nUżyj linku poniżej do zresetowania hasła:\n{link}\nCzas ważności: 5min.\n")
 
 
 class NewDeviceException(Exception):
